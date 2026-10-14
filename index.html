@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Para Valentina ❤️ Determinación</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <main class="main-wrapper">
+    
+    <!-- ==================== ESCENA 1: LA BATALLA DE UNDERTALE ==================== -->
+    <div class="scene" id="sceneBattle">
+      
+      <!-- Encabezado / Punto de Guardado -->
+      <header class="header-box">
+        <h1 class="title">VALENTINE'S TALE</h1>
+        <div class="save-point" id="savePoint" title="Haz clic para guardar y restaurar HP">
+          <span class="star">★</span>
+          <span class="save-text">PUNTO DE GUARDADO (RESTAURAR HP)</span>
+        </div>
+      </header>
+
+      <!-- Área de Combate -->
+      <section class="battle-container">
+        
+        <!-- El Cerdito Enemigo (Estilo Monstruo Pixel Art de Undertale) -->
+        <div class="enemy-area">
+          <div class="enemy-speech" id="enemySpeech">¡Oink! ¡No te dejaré pasar sin jugar!</div>
+          
+          <!-- Sprite Monocromático Auténtico de Undertale -->
+          <svg class="pig-undertale-sprite" id="pigSprite" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            <!-- Colita rizada (izquierda) -->
+            <path d="M 28 85 Q 16 80 18 70 Q 22 62 30 70" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" />
+            
+            <!-- Cuerpo / Pancita del Cerdito -->
+            <ellipse cx="60" cy="80" rx="36" ry="28" fill="#ffffff" stroke="#000000" stroke-width="4" />
+            
+            <!-- Patitas traseras / Base -->
+            <ellipse cx="40" cy="102" rx="10" ry="6" fill="#ffffff" stroke="#000000" stroke-width="3" />
+            <ellipse cx="80" cy="102" rx="10" ry="6" fill="#ffffff" stroke="#000000" stroke-width="3" />
+            <line x1="40" y1="100" x2="40" y2="108" stroke="#000000" stroke-width="2" />
+            <line x1="80" y1="100" x2="80" y2="108" stroke="#000000" stroke-width="2" />
+
+            <!-- Cabeza -->
+            <circle cx="60" cy="46" r="32" fill="#ffffff" stroke="#000000" stroke-width="4" />
+
+            <!-- Orejita izquierda -->
+            <polygon points="34,25 44,4 54,20" fill="#ffffff" stroke="#000000" stroke-width="4" />
+            <polygon points="38,22 44,10 50,20" fill="#000000" />
+
+            <!-- Orejita derecha -->
+            <polygon points="86,25 76,4 66,20" fill="#ffffff" stroke="#000000" stroke-width="4" />
+            <polygon points="82,22 76,10 70,20" fill="#000000" />
+
+            <!-- Ojos grandes estilo Undertale -->
+            <ellipse cx="46" cy="40" rx="6" ry="8" fill="#000000" />
+            <circle cx="44" cy="38" r="2.5" fill="#ffffff" />
+            <ellipse cx="74" cy="40" rx="6" ry="8" fill="#000000" />
+            <circle cx="72" cy="38" r="2.5" fill="#ffffff" />
+
+            <!-- Mejillas con trama pixel (sonrojo) -->
+            <g fill="#000000" opacity="0.6">
+              <rect x="36" y="50" width="3" height="3" />
+              <rect x="42" y="52" width="3" height="3" />
+              <rect x="75" y="50" width="3" height="3" />
+              <rect x="81" y="52" width="3" height="3" />
+            </g>
+
+            <!-- Hocico de Cerdo -->
+            <ellipse cx="60" cy="53" rx="16" ry="11" fill="#ffffff" stroke="#000000" stroke-width="3.5" />
+            <!-- Orificios del hocico -->
+            <ellipse cx="54" cy="53" rx="3" ry="4" fill="#000000" />
+            <ellipse cx="66" cy="53" rx="3" ry="4" fill="#000000" />
+
+            <!-- Manitas / Pezuñitas delanteras apoyadas en la pancita -->
+            <ellipse cx="48" cy="74" rx="7" ry="9" fill="#ffffff" stroke="#000000" stroke-width="3" />
+            <line x1="48" y1="76" x2="48" y2="83" stroke="#000000" stroke-width="2" />
+            
+            <ellipse cx="72" cy="74" rx="7" ry="9" fill="#ffffff" stroke="#000000" stroke-width="3" />
+            <line x1="72" y1="76" x2="72" y2="83" stroke="#000000" stroke-width="2" />
+
+            <!-- Pequeño corazón o estrella brillante arriba -->
+            <path d="M 60 12 L 62 16 L 66 18 L 62 20 L 60 24 L 58 20 L 54 18 L 58 16 Z" fill="#ffff00" stroke="#000000" stroke-width="1.5" />
+          </svg>
+        </div>
+
+        <!-- La Caja de Batalla (Menú o Esquivar Balas) -->
+        <div class="battle-box-wrapper" id="battleBoxWrapper">
+          
+          <!-- VISTA MENÚ -->
+          <div class="box-menu-view" id="boxMenuView">
+            <p class="dialogue-narration" id="boxNarration">* El Cerdito bloquea el camino alegremente.</p>
+            
+            <div class="box-options-grid" id="boxOptionsGrid" style="display: none;"></div>
+
+            <button class="btn-continue-turn" id="btnContinue" style="display: none;">
+              CONTINUAR [Z] ▶
+            </button>
+          </div>
+
+          <!-- VISTA ESQUIVAR BALAS (AMPLIADA A 250PX DE ALTO) -->
+          <canvas id="battleCanvas" width="460" height="250"></canvas>
+
+          <!-- Overlay de Victoria / Game Over -->
+          <div class="battle-overlay hidden" id="battleOverlay">
+            <p class="overlay-title" id="overlayTitle"></p>
+            <button class="overlay-btn" id="overlayBtn"></button>
+          </div>
+        </div>
+
+        <!-- Estadísticas de Valentina -->
+        <div class="stats-row">
+          <div><strong>VALENTINA</strong> &nbsp; LV 1</div>
+          <div class="hp-container">
+            <span class="hp-label">HP</span>
+            <div class="hp-bar-bg">
+              <div class="hp-bar-fill" id="hpFill"></div>
+            </div>
+            <span id="hpText">20 / 20</span>
+          </div>
+          <div>RONDA: <span id="turnCounter">1</span></div>
+        </div>
+
+        <!-- Botones Principales -->
+        <div class="buttons-row">
+          <button class="undertale-btn" id="btnFight">
+            <span class="btn-heart">❤️</span> PELEAR
+          </button>
+          <button class="undertale-btn" id="btnAct">
+            <span class="btn-heart">❤️</span> ACTUAR
+          </button>
+          <button class="undertale-btn" id="btnItem">
+            <span class="btn-heart">❤️</span> OBJETO
+          </button>
+          <button class="undertale-btn" id="btnMercy">
+            <span class="btn-heart">❤️</span> PERDONAR
+          </button>
+        </div>
+
+        <!-- Controles Móviles en Pantalla -->
+        <div class="mobile-controls">
+          <div></div>
+          <button class="dpad-btn" id="btnUp">▲</button>
+          <div></div>
+          <button class="dpad-btn" id="btnLeft">◀</button>
+          <button class="dpad-btn" id="btnDown">▼</button>
+          <button class="dpad-btn" id="btnRight">▶</button>
+        </div>
+      </section>
+
+      <!-- Barra de controles de sonido -->
+      <div class="bottom-bar">
+        <button class="sound-toggle" id="musicToggle">🎵 MÚSICA DE PELEA: OFF</button>
+        <button class="sound-toggle" id="soundToggle">🔊 SONIDOS: ON</button>
+      </div>
+    </div>
+
+
+    <!-- ==================== ESCENA 2: LA CARTA ESPECIAL (LOST GIRL) ==================== -->
+    <div class="scene hidden" id="sceneLetter">
+      
+      <div class="letter-scene-container">
+        <h2 class="letter-title">⭐ PARA MI VALENTINA ⭐</h2>
+
+        <!-- Marco Polaroid con la foto de Valentina y su novio -->
+        <div class="photo-frame">
+          <img class="photo-img" src="assets/img/foto_valentina.jpeg" alt="Valentina y yo">
+          <div class="photo-caption">Tú y yo ❤️</div>
+        </div>
+
+        <!-- Texto de la Carta de Amor -->
+        <div class="letter-text">
+          <p>* Mi querida Valentina,</p>
+          <p>
+            * Si estás viendo esto, significa que lograste calmar al cerdito con tu paciencia, tu ternura y todo tu amor.
+          </p>
+          <p>
+            * Quería crear un rincón que fuera solo nuestro, tan divertido y especial como lo eres tú para mí. Cada momento a tu lado me recuerda la suerte inmensa que tengo de tenerte en mi vida.
+          </p>
+          <p>
+            * Gracias por tus risas, por tu cariño y por llenar cada uno de mis días de pura determinación y felicidad.
+          </p>
+          <p style="color: var(--yellow-accent); text-align: right; margin-top: 24px;">
+            Te amo con todo mi corazón. Siempre tuyo ❤️
+          </p>
+        </div>
+
+        <!-- Botón para volver a jugar si lo desea -->
+        <button class="btn-replay" id="btnReplay">
+          ↺ VOLVER A JUGAR LA BATALLA
+        </button>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Pistas de Audio -->
+  <audio id="bgBattleMusic" loop src="assets/audio/mus_battle.ogg"></audio>
+  <audio id="bgLostGirl" loop src="assets/audio/lost_girl.ogg"></audio>
+
+  <!-- Scripts -->
+  <script src="js/main.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>
